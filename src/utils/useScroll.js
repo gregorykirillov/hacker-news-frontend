@@ -1,9 +1,9 @@
+import storiesIds from '@/store/storiesIds';
 import {useState, useEffect} from 'react';
 import {MAX_ITEMS_COUNT, ADD_ITEMS_COUNT} from './constants';
 
 export const useScroll = () => {
     const [scrolledToBottom, setScrolledToBottom] = useState(false);
-    const [count, setCount] = useState(ADD_ITEMS_COUNT);
 
     const handleScroll = () => {
         if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || scrolledToBottom) {
@@ -16,9 +16,9 @@ export const useScroll = () => {
     useEffect(() => {
         if (!scrolledToBottom) return;
 
-        count + ADD_ITEMS_COUNT >= MAX_ITEMS_COUNT
-            ? setCount(MAX_ITEMS_COUNT)
-            : setCount(count + ADD_ITEMS_COUNT);
+        storiesIds.count + ADD_ITEMS_COUNT >= MAX_ITEMS_COUNT
+            ? storiesIds.setCount(MAX_ITEMS_COUNT)
+            : storiesIds.setCount(storiesIds.count + ADD_ITEMS_COUNT);
 
         setScrolledToBottom(false);
     }, [scrolledToBottom]);
@@ -28,5 +28,5 @@ export const useScroll = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    return {count};
+    return {count: storiesIds.count};
 };
