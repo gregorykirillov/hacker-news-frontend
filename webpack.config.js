@@ -1,10 +1,15 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const {DefinePlugin} = require('webpack');
 
 module.exports = {
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
+        publicPath: '/',
+    },
+    devServer: {
+        historyApiFallback: true,
     },
     devtool: 'source-map',
     resolve: {
@@ -46,6 +51,9 @@ module.exports = {
         new HtmlWebPackPlugin({
             template: './public/index.html',
             favicon: './public/favicon.ico'
+        }),
+        new DefinePlugin({
+            REACT_APP_SERVER_URL: '\'https://hacker-news.firebaseio.com/v0\'',
         }),
     ],
 };

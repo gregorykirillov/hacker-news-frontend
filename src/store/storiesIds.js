@@ -1,15 +1,17 @@
-import {ADD_ITEMS_COUNT} from '@/utils/constants';
 import {request} from '@/utils/request';
-import {getNewStoriesUrl} from '@/utils/routes';
-import {makeAutoObservable, toJS} from 'mobx';
+import {getNewStoriesIdUrl} from '@/utils/routes';
+import {makeAutoObservable} from 'mobx';
+import {ADD_ITEMS_COUNT} from '@/utils/constants';
+import {unstable_batchedUpdates} from 'react-dom';
 
-const getNewIds = (storiesIds, json) => json.filter(el => storiesIds.indexOf(el) < 0);
+const filterNewIds = (storiesIds, json) => json.filter(el => storiesIds.indexOf(el) < 0);
 
 class StoriesIds {
     constructor() {
         this.storiesIds = [];
         this.newStoriesIds = [];
         this.count = ADD_ITEMS_COUNT;
+        this.oldCount = 0;
         
         makeAutoObservable(this);
     }
@@ -26,22 +28,26 @@ class StoriesIds {
         this.count = count;
     }
 
-    getAll() {
-        return toJS(this.storiesIds);
+    setOldCount(count) {
+        this.oldCount = count;
     }
 
-    getNew() {
-        return toJS(this.newStoriesIds);
-    }
-
-    async fetchStoriesIds() {
-        const res = await request(getNewStoriesUrl());
+    async fetchStoriesIds(isRefresh = false) {
+        const res = await request(getNewStoriesIdUrl());
 
         if (res.ok) {
-            res.data.length = this.count;
-
-            this.setNewStoriesIds(getNewIds(this.getAll(), res.data));
-            this.setStoriesIds(res.data);
+            const newIds = filterNewIds(this.storiesIds, res.data)?.slice(isRefresh ? 0 : this.oldCount, this.count);
+            
+            if (newIds.length) {
+                unstable_batchedUpdates(() => {
+                    this.setNewStoriesIds(newIds);
+                    this.setStoriesIds(res.data);
+                    if (isRefresh) {
+                        this.setOldCount(this.count);
+                        this.setCount(this.count + newIds.length);
+                    }
+                });
+            }
         }
     }
 }

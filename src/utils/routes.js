@@ -1,2 +1,5 @@
-export const getNewStoriesUrl = () => 'https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty';
-export const getStoryInfoUrl = id => `https://hacker-news.firebaseio.com/v0/item/${id}.json`;
+import {SERVER_URL} from './settings';
+
+export const getNewStoriesIdUrl = () => `${SERVER_URL}/newstories.json?print=pretty`;
+export const getStoryInfoUrl = id => `${SERVER_URL}/item/${id}.json`;
+export const getStoryUrl = id => `/story/${id}`;
