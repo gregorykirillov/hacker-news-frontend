@@ -1,17 +1,20 @@
+import {unstable_batchedUpdates} from 'react-dom';
+import {makeAutoObservable} from 'mobx';
+
 import {request} from '@/utils/request';
 import {getNewStoriesIdUrl} from '@/utils/routes';
-import {makeAutoObservable} from 'mobx';
 import {ADD_ITEMS_COUNT} from '@/utils/constants';
-import {unstable_batchedUpdates} from 'react-dom';
 
-const filterNewIds = (storiesIds, json) => json.filter(el => storiesIds.indexOf(el) < 0);
+const filterNewIds = (storiesIds, json) => {
+    return json.filter(el => storiesIds.indexOf(el) < 0);
+};
 
 class StoriesIds {
     constructor() {
         this.storiesIds = [];
         this.newStoriesIds = [];
-        this.count = ADD_ITEMS_COUNT;
         this.oldCount = 0;
+        this.count = ADD_ITEMS_COUNT;
         
         makeAutoObservable(this);
     }

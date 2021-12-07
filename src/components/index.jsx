@@ -1,2 +1,1 @@
-export {default as StoryList} from './StoryList';
-export {default as StoryItem} from './StoryItem';
+export {default as StoriesListPage} from '../pages/StoriesListPage';

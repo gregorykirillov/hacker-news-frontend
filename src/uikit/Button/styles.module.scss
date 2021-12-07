@@ -1,0 +1,33 @@
+@import '@/common/colors';
+
+.button {
+    display: inline-block;
+
+    margin: 0 0 15px 0;
+    padding: 1px 7px 2px;
+
+    border-color: $gray;
+    border-style: solid;
+    border-width: 1px;
+
+    text-rendering: auto;
+    text-align: start;
+    color: initial;
+
+    transition: .3s;
+    cursor: pointer;
+
+    &.sm {
+        border-radius: 3px;
+    }
+
+    &.md {
+        height: 30px;
+        border-radius: 5px;
+    }
+
+    &:hover, &:focus {
+        background-color: $light-gray;
+        filter: none;
+    }
+}

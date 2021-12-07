@@ -1,16 +1,23 @@
 import React from 'react';
-import {observer} from 'mobx-react-lite';
 import {Routes, Route} from 'react-router-dom';
+import {observer} from 'mobx-react-lite';
 
-import {StoryList, StoryItem} from './components';
+import {StoriesListPage} from '@/pages';
+import {StoryPage} from './pages';
+import Header from './components/Header';
 
 const App = observer(() => {
     return (
         <div className="App">
-            <Routes>
-                <Route exact path="/" element={<StoryList />}/>
-                <Route exact path="story/:storyId" element={<StoryItem />}/>
-            </Routes>
+            
+            <Header />
+
+            <div className="container">                
+                <Routes>
+                    <Route exact path="/" element={<StoriesListPage />}/>
+                    <Route exact path="/story/:storyId" element={<StoryPage />}/>
+                </Routes>
+            </div>
         </div>
     );
 });

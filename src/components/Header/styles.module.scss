@@ -1,0 +1,43 @@
+@import "@/common/colors";
+
+.header {
+    height: 100px;
+
+    box-shadow: 0 0 10px 0 $gray;
+
+    .logo {
+        cursor: default;
+        
+        -moz-user-select: none;
+        -webkit-user-select: none;
+    }
+
+    &__section {
+        display: flex;
+        height: 100%;
+        align-items: center;
+    }
+
+    .navbar {
+        line-height: 100px;
+
+        &__item {
+            display: inline-block;
+            padding: 0 10px;
+            margin: 0 10px;
+    
+            transition: .3s;
+            cursor: pointer;
+            color: inherit;
+    
+            &:hover, &:focus {
+                background-color: $light-gray;
+                filter: none;
+            }
+
+            &:active, &:host, &:current, &:checked {
+                background-color: $gray;
+            }
+        }
+    }
+}

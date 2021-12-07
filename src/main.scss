@@ -1,0 +1,33 @@
+@import '@/common/colors';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    color: $blue;
+    text-decoration: none;
+    transition: .3s;
+    
+    &:hover, &:focus {
+        filter: brightness(0.3);
+    }
+}
+
+button {
+    border: none;
+    background: transparent;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 50px 0;
+}

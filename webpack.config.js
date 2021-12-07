@@ -30,7 +30,7 @@ module.exports = {
                 },
             },
             {
-                test: /\.css$/,
+                test: /\.[s]?[ac]ss$/,
                 use: [
                     {
                         loader: 'style-loader',
@@ -38,6 +38,9 @@ module.exports = {
                     {
                         loader: 'css-loader',
                     },
+                    {
+                        loader: 'sass-loader',
+                    }
                 ],
             },
             {
@@ -53,7 +56,7 @@ module.exports = {
             favicon: './public/favicon.ico'
         }),
         new DefinePlugin({
-            REACT_APP_SERVER_URL: '\'https://hacker-news.firebaseio.com/v0\'',
+            REACT_APP_SERVER_URL: '\'https://hacker-news.firebaseio.com/v0\''
         }),
     ],
 };

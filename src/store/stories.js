@@ -1,17 +1,15 @@
-import {MAX_REQUEST_COUNT} from '@/utils/constants';
-import {request} from '@/utils/request';
-import {getStoryInfoUrl} from '@/utils/routes';
 import {makeAutoObservable, toJS} from 'mobx';
 import {unstable_batchedUpdates} from 'react-dom';
+
+import {fetchInfo} from '@/utils/fetchInfo';
 import storiesIds from './storiesIds';
+import story from './story';
 
-const delay = ms => {
-    return new Promise(resolve => setTimeout(resolve, ms));
+const filterNewStories = (stories, json) => {
+    const stIds = stories.map(el => el.id);
+    
+    return json.filter(el => !stIds.includes(el.id));
 };
-
-const filterNewStories = (stories, json) => json.filter(el => {
-    return stories.indexOf(el) < 0;
-});
 
 class Stories {
     constructor() {
@@ -36,23 +34,22 @@ class Stories {
         return toJS(this.stories);
     }
 
-    async fetchStoryInfo(id, tryNum=0) {
-        const res = await request(getStoryInfoUrl(id));
-
-        if (res.ok) {
-            if (res.data !== null) return res.data;
-            
-            if (tryNum++ == MAX_REQUEST_COUNT) return null;
-                
-            delay(1000).then(() => this.fetchStoryInfo(id, tryNum));
+    async fetchStory(storyId) {
+        const fetchStory = await fetchInfo(storyId);
+        if (fetchStory) {
+            story.setStory([fetchStory]);
+            this.addStories([fetchStory]);
+        }
+        else {
+            story.setError('Ошибка при загрузке статьи');
         }
     }
 
     async fetchStories() {
         const fetchedStories = await Promise.all(toJS(storiesIds.newStoriesIds.length)
-            ? storiesIds.newStoriesIds.map(id => this.fetchStoryInfo(id))
-            : storiesIds.storiesIds.slice(storiesIds.oldCount, storiesIds.count).map(id => this.fetchStoryInfo(id)));
-
+            ? storiesIds.newStoriesIds.map(id => fetchInfo(id))
+            : storiesIds.storiesIds.slice(storiesIds.oldCount, storiesIds.count).map(id => fetchInfo(id))
+        );
 
         if (fetchedStories?.length) {
             unstable_batchedUpdates(() => {

@@ -1,0 +1,35 @@
+@import '@/common/colors';
+
+.row {
+    
+    &:nth-child(odd) > .card {
+    
+        border-top: 1px solid $gray;
+        border-bottom: 1px solid $gray;
+    
+        background: $light-gray;
+    }
+
+    &:hover, &:focus > .card {
+        background-color: $gray;
+    }
+
+    .card {
+        padding: 15px;
+        border-radius: 7px;
+        color: initial;
+        transition: .3s;
+    
+        &Info {
+            display: inline;
+            font-size: 12px;
+            color: $dark-gray;
+    
+            span {
+                &:nth-child(even) {
+                    padding: 0 15px;
+                }
+            }
+        }
+    }
+}
