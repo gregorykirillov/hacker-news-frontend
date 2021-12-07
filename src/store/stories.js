@@ -1,9 +1,7 @@
 import {makeAutoObservable, toJS} from 'mobx';
-import {unstable_batchedUpdates} from 'react-dom';
 
 import {fetchInfo} from '@/utils/fetchInfo';
 import storiesIds from './storiesIds';
-import story from './story';
 
 const filterNewStories = (stories, json) => {
     const stIds = stories.map(el => el.id);
@@ -14,6 +12,9 @@ const filterNewStories = (stories, json) => {
 class Stories {
     constructor() {
         this.stories = [];
+        this.error = null;
+        this.isLoading = true;
+        this.isFinished = false;
         
         makeAutoObservable(this);
     }
@@ -25,41 +26,51 @@ class Stories {
     setStories(stories) {
         this.stories = stories;
     }
+    
+    setLoading(loading) {
+        this.isLoading = loading;
+    }
+
+    setFinished(finished) {
+        this.isFinished = finished;
+    }
+
+    setError(error) {
+        this.error = error;
+    }
 
     sortStories() {
         return this.stories.sort((a, b) => b.time - a.time);
     }
 
     get() {
-        return toJS(this.stories);
+        return this.stories;
     }
 
-    async fetchStory(storyId) {
-        const fetchStory = await fetchInfo(storyId);
-        if (fetchStory) {
-            story.setStory([fetchStory]);
-            this.addStories([fetchStory]);
-        }
-        else {
-            story.setError('Ошибка при загрузке статьи');
-        }
+    getStory(id) {
+        return this.stories.find(s => s.id === id);
     }
 
     async fetchStories() {
-        const fetchedStories = await Promise.all(toJS(storiesIds.newStoriesIds.length)
-            ? storiesIds.newStoriesIds.map(id => fetchInfo(id))
+        this.setLoading(true);
+
+        const getStoriesRes = await Promise.all(storiesIds.newStoriesIds.length
+            ? storiesIds.newStoriesIds.map(id => {storiesIds.setNewStoriesIds([]); return fetchInfo(id);})
             : storiesIds.storiesIds.slice(storiesIds.oldCount, storiesIds.count).map(id => fetchInfo(id))
         );
 
-        if (fetchedStories?.length) {
-            unstable_batchedUpdates(() => {
-                this.addStories(fetchedStories);
-                this.sortStories();
-                storiesIds.newStoriesIds.length = 0;
-            });
-            return;
-        }
-        return;
+        const filtered = getStoriesRes.map(res => {
+            if (!res.ok) {
+                this.error = res.error;
+            } else {
+                return res.data;
+            }
+        });
+
+        filtered && this.addStories(filtered);
+
+        this.setLoading(false);
+        this.setFinished(true);
     }
 }
 export default new Stories();

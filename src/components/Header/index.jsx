@@ -10,9 +10,11 @@ function Header() {
             <div className={cn('container', styles.header__section)}>
                 <h2 className={styles.logo}>Hacker News</h2>
 
-                <nav className={cn('container', styles.navbar)}>
-                    <ul>
-                        <Link className={styles.navbar__item} to='/'>Главная</Link>
+                <nav className={styles.nav}>
+                    <ul className={styles.navlist}>
+                        <li className={styles.navlist__item}>
+                            <Link className={styles.link} to='/'>Главная</Link>
+                        </li>
                     </ul>
                 </nav>
             </div>

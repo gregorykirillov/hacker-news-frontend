@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import {debounce} from './debounce';
+import {debounce} from '../utils/debounce';
 
 export const useScroll = callback => {
     

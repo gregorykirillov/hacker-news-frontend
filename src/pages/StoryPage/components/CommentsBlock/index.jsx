@@ -1,52 +1,21 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {observer} from 'mobx-react-lite';
 
-import {convertToDate} from '@/utils/convertDate';
-import {loadComments} from './loadComments';
-import {Button} from '@/uikit';
-import {story} from '@/store';
+import stories from '@/store/stories';
 
-import styles from './styles.module.scss';
+import {Comment} from '../Comment';
 
-const StoryBlock = observer(() => {
-    useEffect(() => loadComments(), [story.get().length && story.get()[0]?.id]);
+const CommentsBlock = observer(({storyId}) => {
+    const story = stories.getStory(storyId);
 
-    if (story.error) return (
-        <p>{story.error}</p>
-    );
-
-    if (!story.get()?.length) return (
-        <p>Loading comments...</p>
-    );
+    if (!story.kids) return null;
 
     return (
         <div>
             <h3>Комментарии</h3>
-            {story.getComments().map(({id, by, text, time}) => {
-                return (
-                    <div
-                        id={id}
-                        key={id}
-                        className={styles.commentBlock}
-                    >
-                        <div className={styles.authorInfo}>
-                            <b className={styles.authorName}>{by} </b>
-                            <data>{convertToDate(time)}</data>
-                        </div>
-                        <div 
-                            className={styles.commentText}
-                            dangerouslySetInnerHTML={{__html: text}} 
-                        />
-                        <Button
-                            size='sm'
-                        >
-                            Загрузить комментарии
-                        </Button>
-                    </div>
-                );
-            })}
+            {story.kids.map(id => <Comment key={id} commentId={id} />)}
         </div>
     );
 });
 
-export default StoryBlock;
+export default CommentsBlock;

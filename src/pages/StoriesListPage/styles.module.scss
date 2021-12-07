@@ -10,7 +10,7 @@
         background: $light-gray;
     }
 
-    &:hover, &:focus > .card {
+    &:hover > .card, &:focus > .card {
         background-color: $gray;
     }
 

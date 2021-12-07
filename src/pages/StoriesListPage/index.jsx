@@ -3,20 +3,14 @@ import {Link} from 'react-router-dom';
 import {observer} from 'mobx-react-lite';
 
 import {stories} from '@/store';
-import {useScroll} from '@/utils/useScroll';
+import {useScroll} from '@/hooks/useScroll';
 import {storiesIds} from '@/store';
 import {getStoryUrl} from '@/utils/routes';
-import {ADD_ITEMS_COUNT, MAX_ITEMS_COUNT} from '@/utils/constants';
 import {convertToDate} from '@/utils/convertDate';
 import {Button} from '@/uikit';
 
 import styles from './styles.module.scss';
-
-const callback = () => {
-    storiesIds.count + ADD_ITEMS_COUNT > MAX_ITEMS_COUNT
-        ? storiesIds.count < MAX_ITEMS_COUNT && (storiesIds.setOldCount(storiesIds.count), storiesIds.setCount(MAX_ITEMS_COUNT))
-        : (storiesIds.setOldCount(storiesIds.count), storiesIds.setCount(storiesIds.count + ADD_ITEMS_COUNT));
-};
+import {handleScroll} from './handleScroll';
 
 const StoriesListPage = observer(() => {
     useEffect(() => {
@@ -25,7 +19,7 @@ const StoriesListPage = observer(() => {
     }, []);
     useEffect(() => stories.fetchStories(), [storiesIds.newStoriesIds, storiesIds.count]);
     
-    useScroll(callback);
+    useScroll(handleScroll);
     
     if (!stories.get().length) return <p>Loading...</p>;
 

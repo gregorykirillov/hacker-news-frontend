@@ -37,6 +37,12 @@ module.exports = {
                     },
                     {
                         loader: 'css-loader',
+                        options: {
+                            modules: {
+                                mode: 'local',
+                                localIdentName: '[local]_[hash]'
+                            }
+                        }
                     },
                     {
                         loader: 'sass-loader',

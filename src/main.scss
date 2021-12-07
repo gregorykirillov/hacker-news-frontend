@@ -26,8 +26,13 @@ button {
     background: transparent;
 }
 
-.container {
+:global(.container) {
     width: 80%;
     margin: 0 auto;
-    padding: 50px 0;
+}
+
+@media all and (max-width: 576px) {
+    :global(.container) {
+        width: 100%;
+    }
 }

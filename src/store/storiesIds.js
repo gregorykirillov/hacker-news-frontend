@@ -1,5 +1,4 @@
-import {unstable_batchedUpdates} from 'react-dom';
-import {makeAutoObservable} from 'mobx';
+import {makeAutoObservable, toJS} from 'mobx';
 
 import {request} from '@/utils/request';
 import {getNewStoriesIdUrl} from '@/utils/routes';
@@ -40,16 +39,15 @@ class StoriesIds {
 
         if (res.ok) {
             const newIds = filterNewIds(this.storiesIds, res.data)?.slice(isRefresh ? 0 : this.oldCount, this.count);
-            
+
             if (newIds.length) {
-                unstable_batchedUpdates(() => {
-                    this.setNewStoriesIds(newIds);
-                    this.setStoriesIds(res.data);
-                    if (isRefresh) {
-                        this.setOldCount(this.count);
-                        this.setCount(this.count + newIds.length);
-                    }
-                });
+                this.setNewStoriesIds(newIds);
+                this.setStoriesIds(res.data);
+
+                if (isRefresh) {
+                    this.setOldCount(this.count);
+                    this.setCount(this.count + newIds.length);
+                }
             }
         }
     }

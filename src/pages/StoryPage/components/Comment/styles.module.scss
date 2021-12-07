@@ -2,8 +2,8 @@
 
 .commentBlock {
     padding: 15px;
-    border-bottom: 1px solid $gray;
     line-height: 25px;
+    font-size: 14px;
 
     .childComment {
         height: 50px;
@@ -18,10 +18,17 @@
 
     .authorInfo {
         color: $dark-gray;
-        font-size: 14px;
 
         .authorName {
             margin-right: 10px;
         }
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    .line {
+        border-bottom: 1px solid #cfcfcf;
     }
 }
