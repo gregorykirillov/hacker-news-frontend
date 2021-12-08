@@ -12,6 +12,10 @@ const StoryPage = observer(() => {
 
     useEffect(() => {storyStore.fetchStory(storyId);}, [storyId]);
 
+    const onRefreshComments = () => {
+        storyStore.fetchStory(storyId);
+    };
+
     if (storyStore.isLoading || !storyStore.isFinished) return 'loading...';
     if (storyStore.error) return 'failed to load';
 
@@ -24,6 +28,13 @@ const StoryPage = observer(() => {
             </Link>
 
             <StoryBlock storyId={storyId} />
+
+            <Button
+                onClick={onRefreshComments}
+            >
+                Загрузить свежие комментарии
+            </Button>
+            
             <CommentsBlock storyId={storyId} />
         </>
     );
